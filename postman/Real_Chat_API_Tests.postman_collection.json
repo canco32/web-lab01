@@ -1,0 +1,387 @@
+{
+  "info": {
+    "name": "Real Chat API Tests",
+    "description": "Тести всього API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "base_url", "value": "http://127.0.0.1:8000" },
+    { "key": "auth_token", "value": "" },
+    { "key": "chat_id", "value": "1" },
+    { "key": "message_id", "value": "1" }
+  ],
+  "item": [
+    {
+      "name": "POST api_auth_register_create",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('201', function () { pm.response.to.have.status(201); });",
+              "var r = pm.response.json();",
+              "pm.test('user + token', function () {",
+              "    pm.expect(r).to.have.property('user');",
+              "    pm.expect(r).to.have.property('token');",
+              "});",
+              "pm.globals.set('auth_token', r.token);",
+              "pm.collectionVariables.set('auth_token', r.token);"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"test.postman@example.com\",\n  \"username\": \"testuserpostman\",\n  \"first_name\": \"Тест\",\n  \"last_name\": \"Користувач\",\n  \"gender\": \"M\",\n  \"birth_date\": \"1990-01-01\",\n  \"password\": \"testpassword123\",\n  \"password_confirm\": \"testpassword123\"\n}"
+        },
+        "url": "{{base_url}}/api/auth/register/"
+      }
+    },
+    {
+      "name": "POST api_auth_login_create",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('200', function () { pm.response.to.have.status(200); });",
+              "var r = pm.response.json();",
+              "pm.test('token', function () { pm.expect(r).to.have.property('token'); });",
+              "pm.globals.set('auth_token', r.token);",
+              "pm.collectionVariables.set('auth_token', r.token);"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"test.postman@example.com\",\n  \"password\": \"testpassword123\"\n}"
+        },
+        "url": "{{base_url}}/api/auth/login/"
+      }
+    },
+    {
+      "name": "POST api_auth_login_create (testuser0)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('200', function () { pm.response.to.have.status(200); });",
+              "var r = pm.response.json();",
+              "pm.test('token', function () { pm.expect(r).to.have.property('token'); });",
+              "pm.globals.set('auth_token', r.token);",
+              "pm.collectionVariables.set('auth_token', r.token);"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"testuser0@example.com\",\n  \"password\": \"Testpass123\"\n}"
+        },
+        "url": "{{base_url}}/api/auth/login/"
+      }
+    },
+    {
+      "name": "GET api_auth_profile_retrieve",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('200', function () { pm.response.to.have.status(200); });",
+              "var r = pm.response.json();",
+              "pm.test('keys', function () {",
+              "    pm.expect(r).to.include.keys('id', 'email', 'first_name', 'last_name', 'username');",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Token {{auth_token}}" }
+        ],
+        "url": "{{base_url}}/api/auth/profile/"
+      }
+    },
+    {
+      "name": "PUT api_auth_profile_update",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('200', function () { pm.response.to.have.status(200); });",
+              "var r = pm.response.json();",
+              "pm.test('last_name', function () { pm.expect(r).to.have.property('last_name'); });"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "PUT",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Token {{auth_token}}" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"username\": \"testuser\",\n  \"first_name\": \"Тест\",\n  \"last_name\": \"PUT\",\n  \"gender\": \"M\",\n  \"birth_date\": \"1990-01-01\",\n  \"bio\": \"PUT\"\n}"
+        },
+        "url": "{{base_url}}/api/auth/profile/"
+      }
+    },
+    {
+      "name": "PATCH api_auth_profile_partial_update",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('200', function () { pm.response.to.have.status(200); });",
+              "var r = pm.response.json();",
+              "pm.test('first_name', function () { pm.expect(r).to.have.property('first_name'); });"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "PATCH",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Token {{auth_token}}" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"first_name\": \"PATCH\"\n}"
+        },
+        "url": "{{base_url}}/api/auth/profile/"
+      }
+    },
+    {
+      "name": "GET api_chats_list",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('200', function () { pm.response.to.have.status(200); });",
+              "var d = pm.response.json();",
+              "var list = d.results != null ? d.results : d;",
+              "if (Array.isArray(list) && list.length) {",
+              "    pm.collectionVariables.set('chat_id', String(list[0].id));",
+              "}"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Token {{auth_token}}" }
+        ],
+        "url": "{{base_url}}/api/chats/"
+      }
+    },
+    {
+      "name": "GET api_chats_retrieve",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('200', function () { pm.response.to.have.status(200); });",
+              "var r = pm.response.json();",
+              "pm.test('id', function () { pm.expect(r).to.have.property('id'); });"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Token {{auth_token}}" }
+        ],
+        "url": "{{base_url}}/api/chats/{{chat_id}}/"
+      }
+    },
+    {
+      "name": "GET api_messages_list",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('200', function () { pm.response.to.have.status(200); });",
+              "pm.test('results', function () {",
+              "    pm.expect(pm.response.json()).to.have.property('results');",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Token {{auth_token}}" }
+        ],
+        "url": "{{base_url}}/api/messages/?chat={{chat_id}}"
+      }
+    },
+    {
+      "name": "POST api_messages_create",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('201', function () { pm.response.to.have.status(201); });",
+              "if (pm.response.code === 201) {",
+              "    var r = pm.response.json();",
+              "    pm.test('id', function () { pm.expect(r).to.have.property('id'); });",
+              "    if (r.id) { pm.collectionVariables.set('message_id', String(r.id)); }",
+              "}"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Token {{auth_token}}" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"chat\": {{chat_id}},\n  \"text\": \"POST new\"\n}"
+        },
+        "url": "{{base_url}}/api/messages/"
+      }
+    },
+    {
+      "name": "GET api_messages_retrieve",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('200', function () { pm.response.to.have.status(200); });",
+              "var r = pm.response.json();",
+              "pm.test('id + text', function () {",
+              "    pm.expect(r).to.have.property('id');",
+              "    pm.expect(r).to.have.property('text');",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Token {{auth_token}}" }
+        ],
+        "url": "{{base_url}}/api/messages/{{message_id}}/"
+      }
+    },
+    {
+      "name": "PUT api_messages_update",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('200', function () { pm.response.to.have.status(200); });",
+              "var r = pm.response.json();",
+              "pm.test('text', function () { pm.expect(r).to.have.property('text'); });"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "PUT",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Token {{auth_token}}" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"chat\": {{chat_id}},\n  \"text\": \"PUT text\"\n}"
+        },
+        "url": "{{base_url}}/api/messages/{{message_id}}/"
+      }
+    },
+    {
+      "name": "PATCH api_messages_partial_update",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('200', function () { pm.response.to.have.status(200); });",
+              "var r = pm.response.json();",
+              "pm.test('text contains PATCH', function () { pm.expect(r.text).to.include('PATCH'); });"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "PATCH",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Token {{auth_token}}" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"text\": \"PATCH text\"\n}"
+        },
+        "url": "{{base_url}}/api/messages/{{message_id}}/"
+      }
+    },
+    {
+      "name": "DELETE api_messages_destroy",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('204', function () { pm.response.to.have.status(204); });"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "DELETE",
+        "header": [
+          { "key": "Authorization", "value": "Token {{auth_token}}" }
+        ],
+        "url": "{{base_url}}/api/messages/{{message_id}}/"
+      }
+    }
+  ]
+}
