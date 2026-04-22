@@ -14,8 +14,8 @@
 
 1. Клонування репозиторію:
 ```bash
-git clone https://github.com/username/lab01.git
-cd lab01
+git clone https://github.com/canco32/web-lab01.git
+cd web-lab01
 ```
 
 2. Створення віртуального середовища:
@@ -46,15 +46,22 @@ python manage.py runserver
 http://127.0.0.1:8000/api/docs/
 
 ## Основні endpoints
-- `POST /api/auth/register/` — Реєстрація  
-- `POST /api/auth/login/` — Вхід  
-- `GET /api/auth/profile/` — Профіль  
-- `GET /api/chats/` — Список чатів  
+- `POST /api/auth/register/` — Реєстрація користувача  
+- `POST /api/auth/login/` — Вхід (отримання токена)  
+- `GET /api/auth/profile/` — Перегляд профілю  
+- `PUT /api/auth/profile/` — Повне оновлення профілю  
+- `PATCH /api/auth/profile/` — Часткове оновлення профілю  
+- `GET /api/chats/` — Список чатів поточного користувача  
 - `GET /api/chats/{id}/` — Деталі чату  
-- `GET /api/messages/?chat={id}` — Список повідомлень у чаті  
+- `GET /api/messages/?chat={id}` — Список повідомлень у чаті (кореневі, з відповідями)  
 - `POST /api/messages/` — Надсилання повідомлення  
 - `GET /api/messages/{id}/` — Деталі повідомлення  
+- `PUT /api/messages/{id}/` — Повне оновлення повідомлення  
+- `PATCH /api/messages/{id}/` — Часткове оновлення повідомлення  
+- `DELETE /api/messages/{id}/` — Видалення повідомлення   
 - `GET /api/info/` — Інформація про додаток  
+- `GET /api/schema/` — OpenAPI-схема (YAML/JSON)  
+- `GET /api/docs/` — Документація в браузері (ReDoc)  
 
 ## Технології
 * **Python** 3.14.2  
