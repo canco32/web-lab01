@@ -41,6 +41,10 @@ python manage.py createsuperuser
 ```bash
 python manage.py runserver
 ```
+6. Наповнення бази тестовими даними:
+```bash
+python manage.py populate_db
+```
 
 ## API Документація
 http://127.0.0.1:8000/api/docs/
